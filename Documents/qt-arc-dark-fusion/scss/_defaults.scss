@@ -1,0 +1,18 @@
+// Colors
+// if($is-dark, DARKCOLOR, LIGHTCOLOR);
+// All of these are from https://github.com/jnsh/arc-theme/blob/master/common/gtk-3.0/sass/_colors.scss
+// with slight modifications
+$background: if($is-dark, #383C4A, #F5F6F7) !default;
+$foreground: if($is-dark, #D3DAE3, #5C616C) !default;
+
+$borders_color: if($is-dark, darken($background,6%), darken($background,9%));
+
+$base: if($is-dark, #404552, #FFFFFF);
+
+
+// $entry_bg: if($is-dark, $base_color, lighten($base_color, 0%));
+$entry_border: if($is-dark, darken($borders_color, 0%), #cfd6e6);
+
+// buttons
+$button_bg: if($is-dark, lighten($base, 2%), lighten($background, 2%));
+$button_border: $entry_border;

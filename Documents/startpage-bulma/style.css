@@ -1,0 +1,87 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&display=swap');
+
+/* variables */
+:root {
+    --base-color: #404552;
+    --background-color: #383C4A;
+    --foreground-color: #D3DAE3;
+    --text-color: var(--foreground-color);
+    --button-background-color: #444A58;
+}
+
+/* background color for whole site */
+html {
+    background-color: var(--background-color);
+}
+
+/* search bar and other search-related shit */
+.searchbar {
+    background-color: var(--foreground-color);
+    border-width: 0;
+    border-radius: 6px;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    width: 75%;
+}
+
+.search_main {
+    margin: auto;
+    width: 50%;
+    padding: 10px;
+    text-align: center;
+}
+
+.search_button {
+    background-color: var(--button-background-color);
+    width: 64px;
+    height: auto;
+    border-width: 0px;
+    border-radius: 8px;
+    color: white;
+}
+
+.search_column {
+    flex-basis: 100%;
+    box-sizing: border-box;
+    border: transparent;
+}
+
+.search_row {
+    display: flex;
+    justify-content: space-between;
+}
+
+/* text stuff */
+
+.text {
+    color: var(--text-color);
+}
+
+.greeter_header {
+    font-family: 'JetBrains Mono';
+    font-size: 96px;
+}
+
+/* related to the link buttons */
+
+.extra_links {
+    margin: auto;
+    width: 50%;
+    padding: 10px;
+    text-align: center;
+}
+
+.link_icon {
+    background-color: var(--button-background-color);
+    padding: 8px;
+    border-width: 0px;
+    border-radius: 6px;
+    text-align: center;
+    height: 64px;
+    width: 64px;
+}
+.link_icon:hover {
+    box-shadow: #D3DAE3;
+}
