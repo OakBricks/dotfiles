@@ -207,6 +207,10 @@ root.buttons(gears.table.join(
 -- Bind all key numbers to tags.
 -- Be careful: we use keycodes to make it work on any keyboard layout.
 -- This should map on the top row of your keyboard, usually 1 to 9.
+local globalkeys = require("config.keybindings")
+
+root.keys(globalkeys)
+
 for i = 1, 9 do
     globalkeys = gears.table.join(globalkeys,
         -- View tag only.
@@ -312,6 +316,5 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 
 require("rules")
 require("autostart")
-root.keys(require("config.keybindings"))
 require("widgets")
 -- }}}
