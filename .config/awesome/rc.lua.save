@@ -281,6 +281,7 @@ client.connect_signal("request::titlebars", function(c)
             awful.titlebar.widget.closebutton(c),
             wibox.container.margin(),
             spacing = 4,
+            
             layout = wibox.layout.fixed.horizontal()
         },
         layout = wibox.layout.align.horizontal
