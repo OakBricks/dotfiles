@@ -16,7 +16,9 @@ theme.bg_normal     = "#2f343f"
 theme.bg_focus      = "#2f343f"
 theme.bg_urgent     = "#ff0000"
 theme.bg_minimize   = "#444444"
-theme.bg_systray    = theme.bg_normal
+theme.bg_systray    = theme.bg_normal.."00"
+theme.wibar_bg = theme.bg_normal.."00"
+theme.wibar_height = 32
 
 theme.fg_normal     = "#d3dae3"
 theme.fg_focus      = "#d3dae3"
@@ -29,6 +31,7 @@ theme.border_normal = "#2f343f"
 theme.border_focus  = "#2f343f"
 theme.border_marked = "#91231c"
 
+theme.systray_icon_spacing = 2
 -- There are other variable sets
 -- overriding the default one when
 -- defined, the sets are:
@@ -42,8 +45,11 @@ theme.border_marked = "#91231c"
 -- Example:
 --theme.taglist_bg_focus = "#ff0000"
 
+theme.tasklist_bg_normal = theme.bg_normal.."00"
+theme.tasklist_bg_focus = theme.bg_focus.."AA"
+
 -- Generate taglist squares:
-local taglist_square_size = dpi(4)
+local taglist_square_size = dpi(6)
 theme.taglist_squares_sel = theme_assets.taglist_squares_sel(
     taglist_square_size, theme.fg_normal
 )

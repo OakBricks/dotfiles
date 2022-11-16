@@ -18,6 +18,9 @@ local hotkeys_popup = require("awful.hotkeys_popup")
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
 
+require("widgets.volume")
+require("widgets.powerbutton")
+
 modkey = "Mod4"
 
 -- {{{ Error handling
@@ -87,7 +90,7 @@ mykeyboardlayout = awful.widget.keyboardlayout()
 
 -- {{{ Wibar
 -- Create a textclock widget
-mytextclock = wibox.widget.textclock()
+mytextclock = wibox.widget.textclock("%I:%M %p")
 
 -- Create a wibox for each screen and add it
 local taglist_buttons = gears.table.join(
@@ -146,14 +149,39 @@ awful.screen.connect_for_each_screen(function(s)
     s.mytasklist = awful.widget.tasklist {
         screen  = s,
         filter  = awful.widget.tasklist.filter.currenttags,
-        buttons = tasklist_buttons
+        buttons = tasklist_buttons,
+        layout = {
+            spacing = 10,
+            layout = wibox.layout.flex.horizontal,
+        },
+        widget_template = {
+            {
+                {
+                    {
+                        id     = 'icon_role',
+                        widget = wibox.widget.imagebox,
+                    },
+                    layout = wibox.layout.flex.horizontal,
+                },
+                left  = 10,
+                right = 10,
+                widget = wibox.container.margin
+            },
+            id = "background_role",
+            widget = wibox.container.background,
+        }
     }
 
+    s.mysystray = wibox.widget.systray()
+    s.mysystray:set_base_size(24)
+
     -- Create the wibox
-    s.mywibox = awful.wibar({ position = "top", screen = s })
+    s.mywibox = awful.wibar({ position = "top", screen = s, ontop = true })
 
     -- Add widgets to the wibox
-    s.mywibox:setup {
+    -- oh my goodness gracious what have i done
+    wibox:setup {
+        expand = "none",
         layout = wibox.layout.align.horizontal,
         { -- Left widgets
             layout = wibox.layout.fixed.horizontal,
@@ -164,11 +192,71 @@ awful.screen.connect_for_each_screen(function(s)
         s.mytasklist, -- Middle widget
         { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
-            mykeyboardlayout,
-            wibox.widget.systray(),
-            mytextclock,
-        },
+            spacing = 6,
+            {
+                {
+                    {
+                        {
+                            layout = wibox.layout.fixed.horizontal,
+                            {
+                                s.mysystray,
+                                top = 3,
+                                right = 12,
+                                widget = wibox.container.margin,
+                            }
+                        },
+                        left = 6,
+                        widget = wibox.container.margin
+                    },
+                    bg = beautiful.bg_normal,
+                    shape = function (cr, w, h)
+                        gears.shape.partially_rounded_rect(cr, w, h, true, false, false, true, 6)
+                    end,
+                    widget = wibox.container.background
+                },
+                {
+                    {
+	                    spacing = 6,
+                        layout = wibox.layout.fixed.horizontal,
+                        mykeyboardlayout,
+	                    volume_widget,
+                        mytextclock,
+                        {
+                            right = 4,
+                            widget = wibox.container.margin
+                        }
+                    },
+                    id = "sysinfo_widget",
+                    bg = beautiful.bg_normal,
+                    shape = function (cr, w, h)
+                        gears.shape.partially_rounded_rect(cr, w, h, false, true, true, false, 6)
+                    end,
+                    widget = wibox.container.background,
+                },
+                layout = wibox.layout.fixed.horizontal,
+                spacing = 2
+            },
+            {
+                {
+                    panel_power_button,
+                    right = 4,
+                    top = 4,
+                    left = 4,
+                    bottom = 4,
+                    widget = wibox.container.margin
+                },
+                bg = beautiful.bg_normal,
+                shape = function (cr, w, h)
+                    gears.shape.rounded_rect(cr, w, h, 6)
+                end,
+                widget = wibox.container.background
+            }
+        }
     }
+
+    s.mywibox:get_children_by_id("sysinfo_widget")[1]:connect_signal("button::press", function ()
+        awful.spawn("kitty")
+    end)
 end)
 -- }}}
 

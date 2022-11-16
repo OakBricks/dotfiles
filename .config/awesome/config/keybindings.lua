@@ -6,7 +6,11 @@ local scripts_dir = os.getenv("HOME").."/.scripts"
 
 local globalKeys = gears.table.join(
     awful.key({ "Mod4", }, "space",
-        function() awful.spawn('rofi -show drun') end, {desciprtion = 'Show run menu',group='launcher'}
+        function()
+	awful.spawn('rofi -show drun') end, {description = 'Show run menu',group='launcher'}
+    ),
+    awful.key({ "Mod4", "Shift", "Mod1" }, "Escape",
+        function() awesome.restart() end, {description = 'Reload awesomewm',group='wm'}
     ),
     awful.key({}, "XF86AudioLowerVolume", function()
         awful.util.spawn("sh -c \""..scripts_dir.."/volctl.sh d\"", false) end),
