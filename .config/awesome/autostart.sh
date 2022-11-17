@@ -8,7 +8,7 @@ run() {
 }
 
 run xfsettingsd
-run picom -b --experimental-backends
+run picom -b
 run nitrogen --restore
 run /usr/lib/mate-polkit/polkit-mate-authentication-agent-1
 run /usr/lib/xfce4/notifyd/xfce4-notifyd

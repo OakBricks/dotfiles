@@ -21,6 +21,8 @@ require("awful.hotkeys_popup.keys")
 require("widgets.volume")
 require("widgets.powerbutton")
 
+local freedesktop = require("freedesktop")
+
 modkey = "Mod4"
 
 -- {{{ Error handling
@@ -53,8 +55,8 @@ end
 beautiful.init(gears.filesystem.get_configuration_dir() .. "themes/arc-dark/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
-terminal = "alacritty"
-editor = os.getenv("EDITOR") or "nano"
+terminal = "kitty"
+editor = os.getenv("EDITOR") or "nvim"
 editor_cmd = terminal .. " -e " .. editor
 
 -- Table of layouts to cover with awful.layout.inc, order matters.
@@ -67,18 +69,26 @@ awful.layout.layouts = {
 -- Create a launcher widget and a main menu
 myawesomemenu = {
    { "hotkeys", function() hotkeys_popup.show_help(nil, awful.screen.focused()) end },
-   { "manual", terminal .. " -e man awesome" },
    { "edit config", editor_cmd .. " " .. awesome.conffile },
    { "restart", awesome.restart },
    { "quit", function() awesome.quit() end },
 }
 
-mymainmenu = awful.menu({ items = { { "awesome", myawesomemenu, beautiful.awesome_icon },
-                                    { "open terminal", terminal }
-                                  }
-                        })
+-- mymainmenu = awful.menu({ items = { { "WM", myawesomemenu, beautiful.awesome_icon },
+--                                    { "Terminal", terminal }
+--                                  }
+--                        })
 
-mylauncher = awful.widget.launcher({ image = beautiful.awesome_icon,
+mymainmenu = freedesktop.menu.build({
+    before = { {"WM", myawesomemenu} },
+    sub_menu = "Apps",
+    after = {
+        { "Terminal", terminal }
+    },
+    skip_items = { "Avahi", "xfce4" }
+})
+
+mylauncher = awful.widget.launcher({ image = beautiful.menu_icon,
                                      menu = mymainmenu })
 
 -- Menubar configuration
@@ -159,16 +169,16 @@ awful.screen.connect_for_each_screen(function(s)
                 {
                     {
                         id     = 'icon_role',
-                        widget = wibox.widget.imagebox,
+                        widget = wibox.widget.imagebox
                     },
-                    layout = wibox.layout.flex.horizontal,
+                    layout = wibox.layout.flex.horizontal
                 },
                 left  = 10,
                 right = 10,
                 widget = wibox.container.margin
             },
             id = "background_role",
-            widget = wibox.container.background,
+            widget = wibox.container.background
         }
     }
 
@@ -180,12 +190,23 @@ awful.screen.connect_for_each_screen(function(s)
 
     -- Add widgets to the wibox
     -- oh my goodness gracious what have i done
-    wibox:setup {
+    s.mywibox:setup {
         expand = "none",
         layout = wibox.layout.align.horizontal,
         { -- Left widgets
             layout = wibox.layout.fixed.horizontal,
-            mylauncher,
+            {
+                {
+                    mylauncher,
+                    margins = 4,
+                    widget = wibox.container.margin
+                },
+                shape = function (cr, w, h)
+                    gears.shape.rounded_rect(cr, w, h, 6)
+                end,
+                bg = beautiful.bg_normal,
+                widget = wibox.container.background,
+            },
             s.mytaglist,
             s.mypromptbox,
         },
@@ -219,7 +240,7 @@ awful.screen.connect_for_each_screen(function(s)
 	                    spacing = 6,
                         layout = wibox.layout.fixed.horizontal,
                         mykeyboardlayout,
-	                    volume_widget,
+	                    volume_icon_widget,
                         mytextclock,
                         {
                             right = 4,
@@ -239,10 +260,7 @@ awful.screen.connect_for_each_screen(function(s)
             {
                 {
                     panel_power_button,
-                    right = 4,
-                    top = 4,
-                    left = 4,
-                    bottom = 4,
+                    margins = 4,
                     widget = wibox.container.margin
                 },
                 bg = beautiful.bg_normal,
@@ -253,10 +271,6 @@ awful.screen.connect_for_each_screen(function(s)
             }
         }
     }
-
-    s.mywibox:get_children_by_id("sysinfo_widget")[1]:connect_signal("button::press", function ()
-        awful.spawn("kitty")
-    end)
 end)
 -- }}}
 
@@ -338,6 +352,18 @@ clientbuttons = gears.table.join(
 
 -- }}}
 
+-- Shorter function name because why not
+-- and also hard coded class names because why not
+tb_trnsprncy_hlpr = function (client, color)
+    if client.class == "kitty" then
+        return color.."D8"
+    elseif client.class == "firefox" and client.type == "normal" then
+        return color.."BF"
+    else
+        return color
+    end
+end
+
 -- Add a titlebar if titlebars_enabled is set to true in the rules.
 client.connect_signal("request::titlebars", function(c)
     -- buttons for the titlebar
@@ -352,7 +378,7 @@ client.connect_signal("request::titlebars", function(c)
         end)
     )
 
-    awful.titlebar(c, { font = "Noto Sans", size = 32, }) : setup {
+    awful.titlebar(c, { bg_normal = tb_trnsprncy_hlpr(c, beautiful.bg_normal), bg_focus = tb_trnsprncy_hlpr(c, beautiful.bg_focus) ,font = "Noto Sans", size = 32, }) : setup {
         { -- Left
             wibox.container.margin(),
             awful.titlebar.widget.titlewidget(c),
@@ -365,9 +391,16 @@ client.connect_signal("request::titlebars", function(c)
             layout  = wibox.layout.flex.horizontal
         },
         { -- Right
-            awful.titlebar.widget.maximizedbutton(c),
-            awful.titlebar.widget.closebutton(c),
-            wibox.container.margin(),
+            {
+                {
+                    awful.titlebar.widget.maximizedbutton(c),
+                    awful.titlebar.widget.closebutton(c),
+                    spacing = 4,
+                    layout = wibox.layout.fixed.horizontal()
+                },
+                margins = 4,
+                widget = wibox.container.margin
+            },
             spacing = 4,
             layout = wibox.layout.fixed.horizontal()
         },
@@ -377,6 +410,9 @@ end)
 
 client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
+
+-- Set preferred icon size
+awesome.set_preferred_icon_size(512)
 
 require("rules")
 require("autostart")

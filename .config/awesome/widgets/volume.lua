@@ -1,14 +1,15 @@
 local wibox = require("wibox")
 local awful = require("awful")
 local gears = require("gears")
+local beautiful = require("beautiful")
 
 local volume_icon = wibox.widget.textbox()
-volume_icon:set_align("right")
+volume_icon:set_align("center")
 
 local volume_text = wibox.widget.textbox()
 volume_text:set_align("right")
 
-volume_widget = wibox.widget {
+volume_icon_widget = wibox.widget {
     {
         volume_icon,
         volume_text,
@@ -18,10 +19,6 @@ volume_widget = wibox.widget {
     shape = function(cr, w, h) gears.shape.rounded_rect(cr, w, h, 4) end,
     widget = wibox.container.background
 }
-
-volume_widget:connect_signal("mouse::press", function ()
-    awful.spawn("kitty")
-end)
 
 function status_to_icon(input)
     local out = "null"
