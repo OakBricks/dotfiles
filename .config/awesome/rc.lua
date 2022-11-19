@@ -355,9 +355,7 @@ clientbuttons = gears.table.join(
 -- Shorter function name because why not
 -- and also hard coded class names because why not
 tb_trnsprncy_hlpr = function (client, color)
-    if client.class == "kitty" then
-        return color.."D8"
-    elseif client.class == "firefox" and client.type == "normal" then
+    if (client.class == "firefox" and client.type == "normal") or client.class == "kitty" then
         return color.."BF"
     else
         return color
