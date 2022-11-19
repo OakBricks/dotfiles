@@ -1,1 +1,26 @@
-/home/andy/.mozilla/firefox/nvwz7fjn.default-release/chrome/userChrome.css
+html, html > *, html > * > *, .browser-toolbar  {
+  border: none !important;
+  -moz-appearance: none !important;
+  box-shadow: none !important;
+  background: transparent!important;
+}
+
+.titlebar-color, .browser-toolbar, findbar {
+  background: rgba(47, 52, 63, 0.75)!important;
+}
+
+.tab-line {
+  background: none !important;
+}
+
+.tab-background[selected=true] {
+  border-radius: 2px;
+  border: none !important;
+}
+
+tab[selected="true"]::after, .tabbrowser-tab[beforeselected-visible]::after {
+    opacity: 0 !important;
+}
+
+/*   rgba(49, 54, 59, 0.75) */
+
