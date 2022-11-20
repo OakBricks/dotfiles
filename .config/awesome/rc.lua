@@ -214,9 +214,9 @@ end
 
 clientbuttons = gears.table.join(
     awful.button({ }, 1, function (c)
-	-- if mymainmenu.visible == true then
-	    mymainmenu:hide()
-	-- end
+    -- if mymainmenu.visible == true then
+        mymainmenu:hide()
+    -- end
         c:emit_signal("request::activate", "mouse_click", {raise = true})
     end),
     awful.button({ modkey }, 1, function (c)
