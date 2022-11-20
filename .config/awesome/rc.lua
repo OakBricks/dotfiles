@@ -145,137 +145,13 @@ local tasklist_buttons = gears.table.join(
 awful.screen.connect_for_each_screen(function(s)
     -- Each screen has its own tag table.
     awful.tag({ "1", "2" }, s, awful.layout.layouts[1])
-
-    -- Create a promptbox for each screen
-    s.mypromptbox = awful.widget.prompt()
-    -- Create a taglist widget
-    s.mytaglist = awful.widget.taglist {
-        screen  = s,
-        filter  = awful.widget.taglist.filter.all,
-        buttons = taglist_buttons
-    }
-
-    -- Create a tasklist widget
-    s.mytasklist = awful.widget.tasklist {
-        screen  = s,
-        filter  = awful.widget.tasklist.filter.currenttags,
-        buttons = tasklist_buttons,
-        layout = {
-            spacing = 10,
-            layout = wibox.layout.flex.horizontal,
-        },
-        widget_template = {
-            {
-                {
-                    {
-                        id     = 'icon_role',
-                        widget = wibox.widget.imagebox
-                    },
-                    layout = wibox.layout.flex.horizontal
-                },
-                left  = 10,
-                right = 10,
-                widget = wibox.container.margin
-            },
-            id = "background_role",
-            widget = wibox.container.background
-        }
-    }
-
-    s.mysystray = wibox.widget.systray()
-    s.mysystray:set_base_size(24)
-
-    -- Create the wibox
-    s.mywibox = awful.wibar({ position = "top", screen = s, ontop = true })
-
-    -- Add widgets to the wibox
-    -- oh my goodness gracious what have i done
-    s.mywibox:setup {
-        expand = "none",
-        layout = wibox.layout.align.horizontal,
-        { -- Left widgets
-            layout = wibox.layout.fixed.horizontal,
-            {
-                {
-                    mylauncher,
-                    margins = 4,
-                    widget = wibox.container.margin
-                },
-                shape = function (cr, w, h)
-                    gears.shape.rounded_rect(cr, w, h, 6)
-                end,
-                bg = beautiful.bg_normal,
-                widget = wibox.container.background,
-            },
-            s.mytaglist,
-            s.mypromptbox,
-        },
-        s.mytasklist, -- Middle widget
-        { -- Right widgets
-            layout = wibox.layout.fixed.horizontal,
-            spacing = 6,
-            {
-                {
-                    {
-                        {
-                            layout = wibox.layout.fixed.horizontal,
-                            {
-                                s.mysystray,
-                                top = 3,
-                                right = 12,
-                                widget = wibox.container.margin,
-                            }
-                        },
-                        left = 6,
-                        widget = wibox.container.margin
-                    },
-                    bg = beautiful.bg_normal,
-                    shape = function (cr, w, h)
-                        gears.shape.partially_rounded_rect(cr, w, h, true, false, false, true, 6)
-                    end,
-                    widget = wibox.container.background
-                },
-                {
-                    {
-	                    spacing = 6,
-                        layout = wibox.layout.fixed.horizontal,
-                        mykeyboardlayout,
-	                    volume_icon_widget,
-                        mytextclock,
-                        {
-                            right = 4,
-                            widget = wibox.container.margin
-                        }
-                    },
-                    id = "sysinfo_widget",
-                    bg = beautiful.bg_normal,
-                    shape = function (cr, w, h)
-                        gears.shape.partially_rounded_rect(cr, w, h, false, true, true, false, 6)
-                    end,
-                    widget = wibox.container.background,
-                },
-                layout = wibox.layout.fixed.horizontal,
-                spacing = 2
-            },
-            {
-                {
-                    panel_power_button,
-                    margins = 4,
-                    widget = wibox.container.margin
-                },
-                bg = beautiful.bg_normal,
-                shape = function (cr, w, h)
-                    gears.shape.rounded_rect(cr, w, h, 6)
-                end,
-                widget = wibox.container.background
-            }
-        }
-    }
+    require("wibar").create_wibar(s, beautiful)
 end)
 -- }}}
 
 -- {{{ Mouse bindings
 root.buttons(gears.table.join(
+    awful.button({ }, 1, function () mymainmenu:hide() end),
     awful.button({ }, 3, function () mymainmenu:toggle() end),
     awful.button({ }, 4, awful.tag.viewnext),
     awful.button({ }, 5, awful.tag.viewprev)
@@ -338,6 +214,9 @@ end
 
 clientbuttons = gears.table.join(
     awful.button({ }, 1, function (c)
+	-- if mymainmenu.visible == true then
+	    mymainmenu:hide()
+	-- end
         c:emit_signal("request::activate", "mouse_click", {raise = true})
     end),
     awful.button({ modkey }, 1, function (c)

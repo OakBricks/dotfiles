@@ -1,1 +1,1 @@
-local wibox.widget
+local wibox = require("wibox")

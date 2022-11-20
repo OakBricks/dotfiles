@@ -1,7 +1,7 @@
 local wibox = require("wibox")
 local assets = os.getenv("HOME").."/.config/awesome/widgets/assets/"
 
-panel_power_button = wibox.widget {
+local panel_power_button = wibox.widget {
     {
         {
             id = "powericon",
@@ -13,3 +13,5 @@ panel_power_button = wibox.widget {
     },
     widget = wibox.container.background
 }
+
+return panel_power_button

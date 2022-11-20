@@ -1,9 +1,0 @@
-nitrogen --restore &
-picom -b --experimental-backends &
-polybar -r &
-tint2 &
-xfsettingsd &
-/usr/lib/mate-polkit/polkit-mate-authentication-agent-1 &
-/usr/lib/xfce4/notifyd/xfce4-notifyd &
-trayer --widthtype request --expand true --edge bottom --height 26 &
-conky &
