@@ -82,7 +82,7 @@ function M.create_wibar(scr, btu)
 			{
 			    scr.barsystray,
 			    top = 4,
-			    right = 8,
+			    right = 6,
 			    widget = wibox.container.margin
 			},
 			{
@@ -96,7 +96,7 @@ function M.create_wibar(scr, btu)
 				    layout = wibox.layout.fixed.horizontal,
 				    widgets.panel_power_button,
 			    	},
-				margins = 4,
+				margins = 6,
 				widget = wibox.container.margin
 		    	    }
 		    	}
