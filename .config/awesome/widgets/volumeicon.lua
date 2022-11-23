@@ -3,8 +3,16 @@ local awful = require("awful")
 local gears = require("gears")
 local beautiful = require("beautiful")
 
+local config = {
+    high = "墳 ",
+    medium = "奔 ",
+    low = "奄 ",
+    muted = "婢 ",
+    unknown = " "
+}
+
 local volume_icon = wibox.widget.textbox()
-volume_icon:set_align("center")
+volume_icon:set_align("right")
 
 local volume_text = wibox.widget.textbox()
 volume_text:set_align("right")
@@ -13,38 +21,48 @@ local volume_icon_widget = wibox.widget {
     {
         volume_icon,
         volume_text,
-        spacing = 6,
+        spacing = 4,
         layout  = wibox.layout.fixed.horizontal
     },
     shape = function(cr, w, h) gears.shape.rounded_rect(cr, w, h, 4) end,
     widget = wibox.container.background
 }
 
-function status_to_icon(input)
-    local out = "null"
+local function volume_to_icon(input)
+    local out = config.unknown
     if input == "muted" then
-        out = "婢"
-    elseif string.find(input, "%d") then
-	out = "墳"
+        out = config.muted
+    else
+        if tonumber(input) > 50 then
+	    out = config.high
+        elseif tonumber(input) <= 50 then
+            out = config.medium
+        elseif tonumber(input) <= 25 then
+            out = config.low
+        end
     end
 
     return out
 end
 
-function update_volume(icon_widget, text_widget)
-    local fd = io.popen("pamixer --get-volume-human")
-    local status = fd:read()
-    icon_widget:set_markup("<b>"..status_to_icon(status).."</b>")
-    text_widget:set_markup(status)
+local function update_volume(icon_widget, text_widget)
+    awful.spawn.easy_async_with_shell("amixer sget Master", function (out)
+        local volume = string.match(out, "(%d?%d?%d)%%")
+        local status = string.match(out, "%[(o[^%]]*)%]")
+        if status == "off" then
+            volume = "muted"
+        end
+        icon_widget:set_markup("<b>"..volume_to_icon(volume).."</b>")
+        text_widget:set_markup(volume)
+    end)
 end
 
 update_volume(volume_icon, volume_text)
 
-
-mytimer = timer({ timeout = 0.2 })
-mytimer:connect_signal("timeout", function() 
+volume_update_timer = timer({ timeout = 0.1 })
+volume_update_timer:connect_signal("timeout", function() 
     update_volume(volume_icon, volume_text)
 end)
-mytimer:start()
+volume_update_timer:start()
 
 return volume_icon_widget

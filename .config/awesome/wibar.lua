@@ -47,16 +47,22 @@ function M.create_wibar(scr, btu)
             {
                 {
                     {
-                        id     = 'icon_role',
-                        widget = wibox.widget.imagebox
+                        {
+                            id = 'icon_role',
+                            widget = wibox.widget.imagebox
+                        },
+                        layout = wibox.layout.flex.horizontal
                     },
-                    layout = wibox.layout.flex.horizontal
+                    margins = 2,
+                    widget = wibox.container.margin
                 },
-                left  = 10,
-                right = 10,
-                widget = wibox.container.margin
+                shape = function (cr, w, h)
+                    gears.shape.rounded_rect(cr, w, h, 6)
+                end,
+                id = "background_role",
+                widget = wibox.container.background
             },
-            id = "background_role",
+            margins = 12,
             widget = wibox.container.background
         }
     }
@@ -67,12 +73,15 @@ function M.create_wibar(scr, btu)
     scr.topbar:setup {
 	expand = "none",
 	layout = wibox.layout.align.horizontal,
-	{
+        -- left widgets
+        {
 	    layout = wibox.layout.fixed.horizontal,
 	    scr.bartaglist
-	}, -- left widgets
+	},
+        -- center widgets
 	scr.bartasklist,
-	{
+	-- right widgets
+        {
 	    layout = wibox.layout.fixed.horizontal,
 	    spacing = 6,
 	    {
@@ -85,21 +94,39 @@ function M.create_wibar(scr, btu)
 			    right = 6,
 			    widget = wibox.container.margin
 			},
-			{
-			    shape = function(cr, w, h)
-				gears.shape.partially_rounded_rect(cr, w, h, true, false, false, true, 6)
-			    end,
-			    bg = "#262b33",
-			    widget = wibox.container.background,
-			    {
-			        {
-				    layout = wibox.layout.fixed.horizontal,
-				    widgets.panel_power_button,
-			    	},
-				margins = 6,
-				widget = wibox.container.margin
-		    	    }
-		    	}
+                        {
+                            {
+                                layout = wibox.layout.fixed.horizontal,
+                                {
+                                    {
+                                        widgets.volume_icon,
+                                        layout = wibox.layout.fixed.horizontal
+                                    },
+                                    margins = 4,
+                                    widget = wibox.container.margin
+                                },
+                                {
+			            shape = function(cr, w, h)
+                                        gears.shape.partially_rounded_rect(cr, w, h, true, false, false, true, 6)
+			            end,
+			            bg = "#262b33",
+			            widget = wibox.container.background,
+			            {
+			                {
+				            layout = wibox.layout.fixed.horizontal,
+				            widgets.panel_power_button,
+			    	        },
+				        margins = 6,
+				        widget = wibox.container.margin
+		    	            }
+		    	        }
+                            },
+                            shape = function (cr, w, h)
+                                gears.shape.rounded_rect(cr, w, h, 6)
+                            end,
+                            bg = "#262b33AA",
+                            widget = wibox.container.background
+                        }
 		    },
 		    left = 6,
 		    widget = wibox.container.margin
