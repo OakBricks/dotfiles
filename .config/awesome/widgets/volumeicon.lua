@@ -59,7 +59,7 @@ end
 
 update_volume(volume_icon, volume_text)
 
-volume_update_timer = timer({ timeout = 0.1 })
+volume_update_timer = gears.timer({ timeout = 0.5 })
 volume_update_timer:connect_signal("timeout", function() 
     update_volume(volume_icon, volume_text)
 end)

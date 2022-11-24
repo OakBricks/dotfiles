@@ -18,9 +18,6 @@ local hotkeys_popup = require("awful.hotkeys_popup")
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
 
-require("widgets.volume")
-require("widgets.powerbutton")
-
 local freedesktop = require("freedesktop")
 
 modkey = "Mod4"
@@ -255,7 +252,7 @@ client.connect_signal("request::titlebars", function(c)
         end)
     )
 
-    awful.titlebar(c, { bg_normal = tb_trnsprncy_hlpr(c, beautiful.bg_normal), bg_focus = tb_trnsprncy_hlpr(c, beautiful.bg_focus) ,font = "Noto Sans", size = 32, }) : setup {
+    awful.titlebar(c, { bg_normal = tb_trnsprncy_hlpr(c, beautiful.bg_normal), bg_focus = tb_trnsprncy_hlpr(c, beautiful.bg_focus), size = 32, }) : setup {
         { -- Left
             wibox.container.margin(),
             awful.titlebar.widget.titlewidget(c),

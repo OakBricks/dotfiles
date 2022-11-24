@@ -41,7 +41,7 @@ local create_button = function (icon)
     return button
 end
 
-local reboot_button = create_button(common.assets_dir.."reboot.svg")
+local reboot_button = create_button(common.assets_dir.."/reboot.svg")
 reboot_button:connect_signal("button::release", function ()
 awful.spawn.with_shell(settings.reboot_cmd)
 end)

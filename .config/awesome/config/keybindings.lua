@@ -13,15 +13,15 @@ local globalKeys = gears.table.join(
         function() awesome.restart() end, {description = 'Reload awesomewm',group='wm'}
     ),
     awful.key({}, "XF86AudioLowerVolume", function()
-        awful.util.spawn("sh -c \""..scripts_dir.."/volctl.sh d\"", false) end),
+        awful.spawn("sh -c \""..scripts_dir.."/volctl.sh d\"", false) end),
     awful.key({}, "XF86AudioRaiseVolume", function()
-        awful.util.spawn("sh -c \""..scripts_dir.."/volctl.sh u\"", false) end),
+        awful.spawn("sh -c \""..scripts_dir.."/volctl.sh u\"", false) end),
     awful.key({}, "XF86AudioMute", function()
-        awful.util.spawn("sh -c \""..scripts_dir.."/volctl.sh m\"", false) end),
+        awful.spawn("sh -c \""..scripts_dir.."/volctl.sh m\"", false) end),
     awful.key({}, "XF86MonBrightnessDown", function()
-    	awful.util.spawn("sh -c \""..scripts_dir.."/backlightctl.sh d\"", false) end),
+    	awful.spawn("sh -c \""..scripts_dir.."/backlightctl.sh d\"", false) end),
     awful.key({}, "XF86MonBrightnessUp", function()
-    	awful.util.spawn("sh -c \""..scripts_dir.."/backlightctl.sh u\"", false) end)
+    	awful.spawn("sh -c \""..scripts_dir.."/backlightctl.sh u\"", false) end)
 )
 
 return globalKeys

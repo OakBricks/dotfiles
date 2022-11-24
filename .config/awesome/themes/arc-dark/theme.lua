@@ -18,8 +18,8 @@ theme.bg_urgent     = "#ff0000"
 theme.bg_minimize   = "#444444"
 theme.bg_systray    = theme.bg_normal.."00"
 theme.titlebar_bg = theme.bg_normal.."D8"
-theme.wibar_bg = theme.bg_normal.."00"
-theme.wibar_height = 32
+theme.wibar_bg = theme.bg_normal.."8A"
+theme.wibar_height = dpi(32)
 
 theme.fg_normal     = "#d3dae3"
 theme.fg_focus      = "#d3dae3"
