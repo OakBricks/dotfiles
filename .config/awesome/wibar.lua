@@ -49,9 +49,12 @@ function M.create_wibar(scr, btu)
                     {
                         {
                             id = 'icon_role',
+                            forced_width = 24,
+                            forced_height = 32,
                             widget = wibox.widget.imagebox
                         },
-                        layout = wibox.layout.flex.horizontal
+                        margins = 2,
+                        widget = wibox.container.margin
                     },
                     margins = 2,
                     widget = wibox.container.margin
@@ -140,6 +143,14 @@ function M.create_wibar(scr, btu)
 	    }
 	}
     }
+    -- make sure that the top bar isn't on top of fullscreen windows
+    client.connect_signal("property::fullscreen", function (c)
+        if c.fullscreen then
+            scr.topbar.ontop = false
+        else
+            scr.topbar.ontop = true
+        end
+    end)
 end
 
 return M
