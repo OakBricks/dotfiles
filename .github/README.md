@@ -2,6 +2,7 @@
 
 ### My system info
 
+|                    |                        |
 | ------------------ | ---------------------- |
 | Machine 💻         | HP 15-cw1063wm (stock) |
 | Distro 🐧          | Arch (BTW)             |
