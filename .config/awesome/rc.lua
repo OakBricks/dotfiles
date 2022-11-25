@@ -238,6 +238,38 @@ tb_trnsprncy_hlpr = function (client, color)
     end
 end
 
+local function create_titlebar_button(color, color_hov, color_active)
+    local widget = wibox.widget {
+        {
+            margins = 12,
+            widget = wibox.container.margin
+        },
+        shape = function (cr, w, h)
+            gears.shape.rounded_rect(cr, w, h, 8)
+        end,
+        bg = color,
+        widget = wibox.container.background
+    }
+
+    widget:connect_signal("button::press", function ()
+        widget.bg = color_active
+    end)
+
+    widget:connect_signal("button::release", function ()
+        widget.bg = color
+    end)
+
+    widget:connect_signal("mouse::enter", function ()
+        widget.bg = color_hov
+    end)
+
+    widget:connect_signal("mouse::leave", function ()
+        widget.bg = color
+    end)
+
+    return widget
+end
+
 -- Add a titlebar if titlebars_enabled is set to true in the rules.
 client.connect_signal("request::titlebars", function(c)
     -- buttons for the titlebar
@@ -248,14 +280,22 @@ client.connect_signal("request::titlebars", function(c)
         end),
         awful.button({ }, 3, function()
             c:emit_signal("request::activate", "titlebar", {raise = true})
-            awful.mouse.client.resize(c)
-        end)
-    )
+    end))
+
+    local close_button = create_titlebar_button("#cc575d", "#d7787d", "#be3841")
+    close_button:connect_signal("button::release", function ()
+        c:kill()
+    end)
+    local maximize_button = create_titlebar_icon("#444a58", "#495162", "#5294e2")
+    maximize_button:connect_signal("button::release", function ()
+        c.maximized = not c.maximized
+        if c.maximized then
+            maximize_button.bg = "#5294e2"
+        end
+    end)
 
     awful.titlebar(c, { bg_normal = tb_trnsprncy_hlpr(c, beautiful.bg_normal), bg_focus = tb_trnsprncy_hlpr(c, beautiful.bg_focus), size = 32, }) : setup {
         { -- Left
-            wibox.container.margin(),
-            awful.titlebar.widget.titlewidget(c),
             spacing = 4,
             buttons = buttons,
             layout  = wibox.layout.fixed.horizontal
@@ -267,8 +307,8 @@ client.connect_signal("request::titlebars", function(c)
         { -- Right
             {
                 {
-                    awful.titlebar.widget.maximizedbutton(c),
-                    awful.titlebar.widget.closebutton(c),
+                    maximize_button,
+                    close_button,
                     spacing = 4,
                     layout = wibox.layout.fixed.horizontal()
                 },
