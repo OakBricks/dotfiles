@@ -231,8 +231,10 @@ clientbuttons = gears.table.join(
 -- Shorter function name because why not
 -- and also hard coded class names because why not
 tb_trnsprncy_hlpr = function (client, color)
-    if (client.class == "firefox" and client.type == "normal") or client.class == "kitty" then
+    if client.class == "kitty" then
         return color.."BF"
+    elseif client.class == "firefox" then
+        return color.."C0"
     else
         return color
     end
@@ -281,18 +283,36 @@ client.connect_signal("request::titlebars", function(c)
         awful.button({ }, 3, function()
             c:emit_signal("request::activate", "titlebar", {raise = true})
     end))
-
     local close_button = create_titlebar_button("#cc575d", "#d7787d", "#be3841")
     close_button:connect_signal("button::release", function ()
         c:kill()
     end)
-    local maximize_button = create_titlebar_icon("#444a58", "#495162", "#5294e2")
+    local maximize_button = create_titlebar_button("#444a58", "#495162", "#5294e2")
+    maximize_button:connect_signal("button::press", function ()
+        if c.maximized then
+            maximize_button.bg = "#444a58"
+        end
+    end)
     maximize_button:connect_signal("button::release", function ()
         c.maximized = not c.maximized
         if c.maximized then
             maximize_button.bg = "#5294e2"
         end
     end)
+    maximize_button:connect_signal("mouse::leave", function ()
+        if c.maximized then
+            maximize_button.bg = "#5294e2"
+        end
+    end)
+    maximize_button:connect_signal("mouse::enter", function ()
+        if c.maximized then
+            maximize_button.bg = "#68a2e6"
+        end
+    end)
+
+    if c.maximized then
+        maximize_button.bg = "#5294e2"
+    end
 
     awful.titlebar(c, { bg_normal = tb_trnsprncy_hlpr(c, beautiful.bg_normal), bg_focus = tb_trnsprncy_hlpr(c, beautiful.bg_focus), size = 32, }) : setup {
         { -- Left
@@ -300,7 +320,7 @@ client.connect_signal("request::titlebars", function(c)
             buttons = buttons,
             layout  = wibox.layout.fixed.horizontal
         },
-        { -- Middle
+        { -- Midde
             buttons = buttons,
             layout  = wibox.layout.flex.horizontal
         },
